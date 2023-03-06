@@ -2,16 +2,19 @@ package com.example.bitri;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,18 +33,18 @@ public class MainActivity extends AppCompatActivity {
 
     Button camera, gallery;
     ImageView imageView;
-    TextView result;
+    TextView result, classified;
     int imageSize = 224;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        camera = findViewById(R.id.button);
-        gallery = findViewById(R.id.button2);
+        camera = findViewById(R.id.cameraButton);
+        gallery = findViewById(R.id.galleryButton);
 
         result = findViewById(R.id.result);
+        classified = findViewById(R.id.classified);
         imageView = findViewById(R.id.imageView);
 
         camera.setOnClickListener(new View.OnClickListener() {
@@ -103,11 +106,21 @@ public class MainActivity extends AppCompatActivity {
                     maxPos = i;
                 }
             }
-            String[] classes = {"Paper", "Plastic", "Glass","Trash"};
+            classified.setText("Classé comme :");
+            String[] classes = {"Papier / Carton", "Plastique / Métal", "Verre","Autre"};
             result.setText(classes[maxPos]);
-
-
-
+            if(maxPos == 0) {
+                result.setTextColor(Color.rgb(255, 176, 50));
+            }
+            else if(maxPos == 1) {
+                result.setTextColor(Color.rgb(135, 135, 135));
+            }
+            else if(maxPos == 2) {
+                result.setTextColor(Color.rgb(16, 131, 48));
+            }
+            else if(maxPos == 3) {
+                result.setTextColor(Color.BLACK);
+            }
 
             // Releases model resources if no longer used.
             model.close();
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == RESULT_OK){
             if(requestCode == 3){
+                Log.d("TAG", "Contenu de classified: " + classified.getText().toString());
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
