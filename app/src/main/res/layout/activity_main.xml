@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/galleryButton"
         android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_baseline_camera_alt_24"
         android:text="@string/camera"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:textStyle="normal"
-        android:drawableLeft="@drawable/ic_baseline_camera_alt_24"/>
+        android:textStyle="normal" />
 
     <Button
         android:id="@+id/galleryButton"
